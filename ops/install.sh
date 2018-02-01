@@ -1,7 +1,4 @@
 #!/bin/bash
-# test it with:
-# docker run --rm -p "9200:9200" -p "5601:5601" -p "9125:9125/udp" -it debian 
-
 set -e
 
 # fetches debian dependencies
@@ -17,13 +14,27 @@ apt-get update
 apt-get install -y elasticsearch
 service elasticsearch start
 
-# Kivana
+# Kibana
 apt-get install -y kibana
-cp kibana.yml /etc/kibana
+cat << EOF > /etc/kibana/kibana.yml
+server.host: "0.0.0.0"
+EOF
 service kibana start
 
 # Logstash
 apt-get install -y logstash
 mkdir -p /etc/logstash/conf.d/
-cp logstash.conf /etc/logstash/conf.d/
+cat <<EOF > /etc/logstash/conf.d/logstash.conf
+    input {
+    udp  {
+        codec => "json"
+        port => 9125
+        type => "erlang"
+    }
+}
+output {
+    elasticsearch { hosts => ["localhost:9200"] }
+    stdout { codec => rubydebug }
+}
+EOF
 service logstash start

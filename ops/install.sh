@@ -25,7 +25,7 @@ service kibana start
 apt-get install -y logstash
 mkdir -p /etc/logstash/conf.d/
 cat <<EOF > /etc/logstash/conf.d/logstash.conf
-    input {
+input {
     udp  {
         codec => "json"
         port => 9125

@@ -8,7 +8,8 @@ default:
 	@echo "make test: test install script"
 
 ops:
-	cd ops && docker-compose up
+	cd ops && sh ensure_default_kibana_configuration.sh &
+	cd ops && docker-compose up --force-recreate --abort-on-container-exit 
 
 dev:
 	rebar3 shell --apps log

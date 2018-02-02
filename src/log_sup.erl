@@ -11,5 +11,10 @@ start_link() ->
 
 %% Child :: {Id,StartFunc,Restart,Shutdown,Type,Modules}
 init([]) ->
-    {ok, {{one_for_all, 0, 1}, []}}.
+  SupFlags = #{strategy => one_for_one, intensity => 1, period => 5},
+  ChildSpecs = [#{id => log_generator,
+                  start => {random_log_generator, generate, []},
+                  restart => permanent,
+                  shutdown => brutal_kill}],
+  {ok, {SupFlags, ChildSpecs}}.
 

@@ -11,7 +11,7 @@ ops:
 	cd ops && docker-compose up
 
 dev:
-	rebar3 shell
+	rebar3 shell --apps log
 
 test:
 	cd ops && sh test-install-script.sh

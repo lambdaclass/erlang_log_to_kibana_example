@@ -1,16 +1,17 @@
 {application, log,
- [{description, "An OTP application"},
+ [{description, "Sample lager and kibana"},
   {vsn, "0.1.0"},
   {registered, []},
   {mod, { log_app, []}},
   {applications,
    [kernel,
-    stdlib
+    stdlib,
+    lager
    ]},
   {env,[]},
   {modules, []},
 
   {maintainers, []},
-  {licenses, ["Apache 2.0"]},
+  {licenses, ["MIT"]},
   {links, []}
  ]}.

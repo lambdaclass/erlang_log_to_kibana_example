@@ -9,15 +9,14 @@ services:
       - "9200:9200"
 
   kibana:
-    image: docker.elastic.co/kibana/kibana-oss:6.1.3
+    # image: docker.elastic.co/kibana/kibana-oss:6.1.3
+    build: kibana/
     links:
       - elasticsearch
     volumes:
       - ${PWD}/kibana.yml:/etc/kibana/kibana.yml
     ports:
       - "5601:5601"
-    depends_on:
-      - elasticsearch
 
   logstash:
     image: docker.elastic.co/logstash/logstash-oss:6.1.3
@@ -27,5 +26,3 @@ services:
       - ${PWD}/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
     ports:
       - "9125:9125/udp"
-    depends_on:
-      - elasticsearch

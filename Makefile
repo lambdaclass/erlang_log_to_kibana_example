@@ -8,7 +8,9 @@ default:
 	@echo "make test: test install script"
 
 ops:
-	cd ops && docker-compose up
+	cd ops && \
+	docker-compose build && \
+	docker-compose up
 
 dev:
 	rebar3 shell

@@ -12,6 +12,8 @@ ops:
 	docker-compose build && \
 	docker-compose up
 
+ops_reset:
+	cd ops && docker-compose down
 dev:
 	rebar3 shell
 

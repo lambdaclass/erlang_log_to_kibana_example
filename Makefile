@@ -15,7 +15,7 @@ ops:
 ops_reset:
 	cd ops && docker-compose down
 dev:
-	rebar3 shell
+	rebar3 release && rebar3 shell
 
 test:
 	cd ops && sh test-install-script.sh

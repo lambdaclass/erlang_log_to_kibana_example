@@ -1,0 +1,14 @@
+version: '3.5'
+
+services:
+  erlang_test_log:
+    build:
+      context: ../../
+      dockerfile: ./ops/test_erlang/Dockerfile
+    networks:
+      - erlang-ekl-network
+
+networks:
+  erlang-ekl-network:
+    external:
+      name: erlang-ekl-network

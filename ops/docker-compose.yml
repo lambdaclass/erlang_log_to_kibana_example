@@ -1,4 +1,4 @@
-version: '3'
+version: '3.5'
 services:
 
   elasticsearch:
@@ -7,6 +7,8 @@ services:
       - ${PWD}/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
     ports:
       - "9200:9200"
+    networks:
+      - erlang-ekl-network
 
   kibana:
     image: docker.elastic.co/kibana/kibana-oss:6.1.3
@@ -18,6 +20,8 @@ services:
       - "5601:5601"
     depends_on:
       - elasticsearch
+    networks:
+      - erlang-ekl-network
 
   logstash:
     image: docker.elastic.co/logstash/logstash-oss:6.1.3
@@ -29,3 +33,10 @@ services:
       - "9125:9125/udp"
     depends_on:
       - elasticsearch
+    networks:
+      - erlang-ekl-network
+
+networks:
+  erlang-ekl-network:
+    driver: bridge
+    name: erlang-ekl-network

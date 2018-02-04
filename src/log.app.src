@@ -6,7 +6,9 @@
   {applications,
    [kernel,
     stdlib,
-    lager
+    lager,
+    syslog,
+    lager_syslog
    ]},
   {env,[]},
   {modules, []},

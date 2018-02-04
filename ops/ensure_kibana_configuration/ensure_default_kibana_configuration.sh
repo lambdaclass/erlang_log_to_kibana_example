@@ -1,24 +1,28 @@
 #!/bin/bash
 
-while true; do # wait for local kibana
+es_host="elasticsearch:9200"
+
+trials="20"
+while [ $trials -gt 0 ]; do # wait for local kibana
   echo "$(date) waiting kibana ..."
-  curl -XGET 'localhost:9200/_cluster/state'
+  curl -XGET "$es_host/_cluster/state"
   if [ "$?" -eq 0 ]; then 
     break
   fi
+  trials=$((trials+1))
   sleep 5
 done
 
 elasticdump \
-  --output=http://localhost:9200/.kibana \
+  --output=http://$es_host/.kibana \
   --input=dot.kibana.analyzer \
   --type=analyzer
 elasticdump \
-  --output=http://localhost:9200/.kibana \
+  --output=http://$es_host/.kibana \
   --input=dot.kibana.mapping \
   --type=mapping
 elasticdump \
-  --output=http://localhost:9200/.kibana \
+  --output=http://$es_host/.kibana \
   --input=dot.kibana.data \
   --type=data
 

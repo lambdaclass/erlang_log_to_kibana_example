@@ -7,8 +7,9 @@ default:
 	@echo "make test: runs the test erlang application"
 
 ops:
-#cd ops && sh ensure_default_kibana_configuration.sh &
-	cd ops && docker-compose up --force-recreate --abort-on-container-exit 
+	cd ops/ensure_kibana_configuration && \
+	 docker-compose up --build --force-recreate -d
+	cd ops/ekl && docker-compose up --force-recreate --abort-on-container-exit 
 
 test:
 	cd ops/test_erlang && \

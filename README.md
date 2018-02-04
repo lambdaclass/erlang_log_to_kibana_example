@@ -2,11 +2,14 @@
 Demonstration of how to setup Elastic Search, Kibana and, Logstash with Erlang lager.
 
 ## stand-alone script
-Check `ops/install.sh`, it will install everything and start all services.
+No functional.
 
 ## Usage
 
-- `make ops` starts the three services with docker compose.
-- `make dev` starts the erlang console, then use `lager:start` and `lager:log`.
+- `make ops` starts every service and initializes kibana.
+- `make test` starts an erlang application that generates random logs.
 
-You can see the logged data at `http://localhost:5601/app/kibana#/dev_tools/`.
+You can see the logged data at `http://localhost:5601/` and click in 'Dashboard'. 
+If the status of kibana is RED saying something about outdated indexes is
+because the default configuration is still being uploaded, wait 5 to 20 seconds 
+and reload the page.

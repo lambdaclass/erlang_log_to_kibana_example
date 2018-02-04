@@ -2,7 +2,7 @@
 Demonstration of how to setup Elastic Search, Kibana and, Logstash with Erlang lager.
 
 ## stand-alone script
-No functional.
+- `ops/stand-alone/install-ekl.sh`: install Elastic Search, Kibana and Logstash.
 
 ## Usage
 

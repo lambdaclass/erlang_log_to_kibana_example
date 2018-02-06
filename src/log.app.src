@@ -7,7 +7,7 @@
    [kernel,
     stdlib,
     lager,
-    syslog,
+    jiffy,
     lager_logstash_backend
    ]},
   {env,[]},

@@ -8,7 +8,7 @@
     stdlib,
     lager,
     syslog,
-    lager_syslog
+    lager_logstash_backend
    ]},
   {env,[]},
   {modules, []},

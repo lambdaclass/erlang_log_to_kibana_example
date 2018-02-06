@@ -1,9 +1,13 @@
 {"1.1.0",
 [{<<"goldrush">>,{pkg,<<"goldrush">>,<<"0.1.9">>},1},
+ {<<"jiffy">>,
+  {git,"git@github.com:davisp/jiffy.git",
+       {ref,"031f9dbbf6c31b83585569cd290504f006540a77"}},
+  1},
  {<<"lager">>,{pkg,<<"lager">>,<<"3.6.1">>},0},
- {<<"lager_syslog">>,
-  {git,"https://github.com/basho/lager_syslog.git",
-       {ref,"126dd0284fcac9b01613189a82facf8d803411a2"}},
+ {<<"lager_logstash_backend">>,
+  {git,"https://github.com/hernanex3/lager_logstash_backend",
+       {ref,"f00dc1359c951d28ed32c0ebd8f66e08e167b78f"}},
   0},
  {<<"syslog">>,{pkg,<<"syslog">>,<<"1.0.5">>},0}]}.
 [

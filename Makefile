@@ -12,5 +12,4 @@ ops:
 	cd ops/ekl && docker-compose up --force-recreate --abort-on-container-exit 
 
 test:
-	cd ops/test_erlang && \
-	docker-compose up --build --abort-on-container-exit 
+	rebar3 shell

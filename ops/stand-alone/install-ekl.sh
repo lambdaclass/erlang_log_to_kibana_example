@@ -45,23 +45,10 @@ mkdir -p /etc/logstash/conf.d/
 cat <<EOF > /etc/logstash/conf.d/logstash.conf
 input {
     udp  {
-        port => 9125
-        type => "syslog"
+        codec => "json"
+        port  => 9125
+        type  => "erlang"
     }
-}
-
-filter {
-  
-    grok {
-      match => { "message" => "%{SYSLOGTIMESTAMP:syslog_timestamp} %{SYSLOGHOST:syslog_hostname} %{DATA:syslog_program}(?:\[%{POSINT:syslog_pid}\])?: \[%{DATA:level}\] %{GREEDYDATA:syslog_message}" }
-      add_field => [ "received_at", "%{@timestamp}" ]
-      add_field => [ "received_from", "%{host}" ]
-    }
-
-    if [syslog_program] != "erlang" {
-        drop { }
-    }
-  
 }
 
 output {

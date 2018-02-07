@@ -18,6 +18,7 @@ services:
       - elasticsearch
     volumes:
       - ${PWD}/kibana.yml:/etc/kibana/kibana.yml
+      - ${PWD}/logtrail.json:/usr/share/kibana/plugins/logtrail/logtrail.json
     ports:
       - "5601:5601"
     depends_on:

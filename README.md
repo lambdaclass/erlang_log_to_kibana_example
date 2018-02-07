@@ -2,16 +2,20 @@
 Demonstration of how to setup Elastic Search, Kibana, Logstash and
 Logtrail, with Erlang lager.
 
+![dashboard](imgs/sample_default_dashboard.jpg)
+![logtrail](imgs/sample_logtrail.jpg)
+
 ## stand-alone script
 See the [stand alone script](ops/stand_alone/).
 
 ## ops
 See [how the ops works](ops/).
 
-## Usage
+## testing
 
 - `make ops` starts every service and initializes kibana.
-- `make test` starts an erlang application that generates random logs.
+- `make test-debug` and `make test-prod` starts an erlang application that
+  generates random logs.
 
 You can see the logged data at `http://localhost:5601/` and click in 'Dashboard'.
 If the status of kibana is RED saying something about outdated indexes is

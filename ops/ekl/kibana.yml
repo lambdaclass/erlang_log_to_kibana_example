@@ -1,2 +1,2 @@
-server.host: "0.0.0.0" asdads
+server.host: "0.0.0.0"
 elasticsearch.url: "http://elasticsearch:9200"

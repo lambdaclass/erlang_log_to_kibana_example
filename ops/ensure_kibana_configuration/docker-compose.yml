@@ -1,0 +1,13 @@
+version: '3.5'
+
+services:
+  ensure_kibana_configuration:
+    build:
+      context: .
+    networks:
+      - erlang-ekl-network
+
+networks:
+  erlang-ekl-network:
+    external:
+      name: erlang-ekl-network

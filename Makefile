@@ -4,18 +4,13 @@ default:
 	@echo "EKL: Elastic Search & Kibana & Logstash"
 	@echo "make [<ops>|<dev>]"
 	@echo "make ops: runs EKL in a local dev environment"
-	@echo "make dev: opens erlang shell"
-	@echo "make test: test install script"
+	@echo "make test: runs the test erlang application"
 
 ops:
-	cd ops && \
-	docker-compose build && \
-	docker-compose up
-
-ops_reset:
-	cd ops && docker-compose down
-dev:
-	rebar3 release && rebar3 shell
+	cd ops/ensure_kibana_configuration && \
+	 docker-compose up --build --force-recreate -d
+	cd ops/ekl && docker-compose up --build --force-recreate --abort-on-container-exit
 
 test:
-	cd ops && sh test-install-script.sh
+	rebar3 shell
+

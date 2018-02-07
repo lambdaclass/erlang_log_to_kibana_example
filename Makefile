@@ -9,7 +9,8 @@ default:
 ops:
 	cd ops/ensure_kibana_configuration && \
 	 docker-compose up --build --force-recreate -d
-	cd ops/ekl && docker-compose up --force-recreate --abort-on-container-exit 
+	cd ops/ekl && docker-compose up --build --force-recreate --abort-on-container-exit
 
 test:
 	rebar3 shell
+

@@ -20,7 +20,7 @@ service elasticsearch start
 # Kibana
 apt-get install -y kibana=6.1.3
 cat << EOF > /etc/kibana/kibana.yml
-server.host: "0.0.0.0"
+server.host: "127.0.0.1"
 EOF
 service kibana start
 

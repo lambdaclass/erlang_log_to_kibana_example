@@ -11,7 +11,9 @@ services:
       - erlang-ekl-network
 
   kibana:
-    image: docker.elastic.co/kibana/kibana-oss:6.1.3
+    build:
+      context: .
+      dockerfile: kibana-dockerfile
     links:
       - elasticsearch
     volumes:

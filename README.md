@@ -5,8 +5,8 @@ Logtrail, with Erlang lager.
 ![dashboard](imgs/sample_default_dashboard.jpg)
 ![logtrail](imgs/sample_logtrail.jpg)
 
-## stand-alone script
-See the [stand alone script](ops/stand_alone/).
+## production script
+See the [production script](ops/production).
 
 ## ops
 See [how the ops works](ops/).

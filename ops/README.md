@@ -3,7 +3,7 @@ OPS
 
 Description of each folder
 
-## ekl
+## development
 EKL abbreviation for Elastic Search, Kibana and Logstash. It contains
 sample debug configuration for testing EKL locally. It uses
 `docker-compose` to run.
@@ -19,5 +19,6 @@ automatically. Also contains two script for doing it manually.
 - `ensure_default_kibana_configuration`: Restore the kibana database using
   the files listed above.
 
-## stand_alone
-[Auto contained script](stand_alone/)
+## production
+[Auto contained script](production/), but still needs
+`ensure_kibana_configuration` to work.

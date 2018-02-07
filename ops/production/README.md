@@ -1,7 +1,10 @@
-Stand alone script
+Production script
 ================
-The script `install-ekl.sh`  should allow you to create by just
+The script `install.sh`  should allow you to create by just
 executing it, install Elastic Search, Logstash, Kivana, and Logtrail plugin.
+
+Please note that this script **needs** the
+`../ensure_kivana_configuration` to work, this should be fixed in future.
 
 
 ## Test it
@@ -21,6 +24,6 @@ $ docker cp . erlang_log_kibana:/home/erlang
 Finally in the docker machine:
 
 ~~~
-$ cd /home/erlang/stand-alone
-$ sh install-ekl.sh
+$ cd /home/erlang/production
+$ sh install.sh
 ~~~

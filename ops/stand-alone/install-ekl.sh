@@ -14,11 +14,11 @@ echo "deb https://artifacts.elastic.co/packages/6.x/apt stable main" |  tee -a /
 apt-get update
 
 # Elastic Search
-apt-get install -y elasticsearch
+apt-get install -y elasticsearch=6.1.3
 service elasticsearch start
 
 # Kibana
-apt-get install -y kibana
+apt-get install -y kibana=6.1.3
 cat << EOF > /etc/kibana/kibana.yml
 server.host: "0.0.0.0"
 EOF
@@ -38,6 +38,51 @@ elasticdump \
   --output=http://localhost:9200/.kibana \
   --input=../ensure_kibana_configuration/dot.kibana.data \
   --type=data
+
+# Kibana logtrail
+service kibana stop
+/usr/share/kibana/bin/kibana-plugin install \
+  https://github.com/sivasamyk/logtrail/releases/download/v0.1.25/logtrail-6.1.3-0.1.25.zip
+cat <<EOF > /usr/share/kibana/plugins/logtrail/logtrail.json
+{
+  "index_patterns" : [
+    {
+      "es": {
+        "default_index": "logstash-*",
+        "allow_url_parameter": false
+      },
+      "tail_interval_in_seconds": 10,
+      "es_index_time_offset_in_seconds": 0,
+      "display_timezone": "UTC",
+      "display_timestamp_format": "YYYY MMM DD HH:mm:ss",
+      "max_buckets": 500,
+      "default_time_range_in_days" : 0,
+      "max_hosts": 100,
+      "max_events_to_keep_in_viewer": 5000,
+      "fields" : {
+        "mapping" : {
+            "timestamp" : "@timestamp",
+            "display_timestamp" : "@timestamp",
+            "hostname" : "host",
+            "program": "type",
+            "message": "message"
+        },
+        "message_format": "{{{marker}}} | {{{message}}}"
+      },
+      "color_mapping" : {
+        "field" : "log_level",
+        "mapping" : {
+          "ERROR": "#ff3232",
+          "WARN": "#ff7f24",
+          "DEBUG": "#ffb90f",
+          "TRACE": "#a2cd5a"
+         }
+      }
+    }
+  ]
+}
+EOF
+service kibana start
 
 # Logstash
 apt-get install -y logstash

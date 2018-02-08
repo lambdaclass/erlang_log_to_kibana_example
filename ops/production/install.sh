@@ -204,7 +204,7 @@ EOF
 service kibana start
 
 # Logstash
-apt-get install -y logstash
+apt-get install -y logstash=1:6.1.3-1
 mkdir -p /etc/logstash/conf.d/
 cat <<EOF > /etc/logstash/conf.d/logstash.conf
 input {
@@ -220,3 +220,20 @@ output {
 }
 EOF
 service logstash start
+
+
+# nginx
+apt-get install -y nginx apache2-utils
+htpasswd -cb /etc/nginx/.htpasswd ekl_user ekl_password # change password
+cat <<EOF > /etc/nginx/sites-available/ekl
+server {
+    listen 0.0.0.0:19090;
+    location / {
+      proxy_pass http://localhost:5601/;
+    auth_basic "Restricted";
+    auth_basic_user_file /etc/nginx/.htpasswd;
+    }
+}
+EOF
+ln -s /etc/nginx/sites-available/ekl /etc/nginx/sites-enabled/ekl
+service nginx restart

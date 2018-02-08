@@ -1,15 +1,23 @@
 # erlang_log_to_kibana
-Demonstration of how to setup Elastic Search, Kibana and, Logstash with Erlang lager.
+Demonstration of how to setup Elastic Search, Kibana, Logstash and
+Logtrail, with Erlang lager.
 
-## stand-alone script
-- `ops/stand-alone/install-ekl.sh`: install Elastic Search, Kibana and Logstash.
+![dashboard](imgs/sample_default_dashboard.jpg)
+![logtrail](imgs/sample_logtrail.jpg)
 
-## Usage
+## production script
+See the [production script](ops/production).
+
+## ops
+See [how the ops works](ops/).
+
+## testing
 
 - `make ops` starts every service and initializes kibana.
-- `make test` starts an erlang application that generates random logs.
+- `make test-env1` and `make test-env2` starts an erlang application that
+  generates random logs.
 
-You can see the logged data at `http://localhost:5601/` and click in 'Dashboard'. 
+You can see the logged data at `http://localhost:5601/` and click in 'Dashboard'.
 If the status of kibana is RED saying something about outdated indexes is
-because the default configuration is still being uploaded, wait 5 to 20 seconds 
+because the default configuration is still being uploaded, wait 5 to 20 seconds
 and reload the page.

@@ -1,6 +1,6 @@
 {
   "index_patterns" : [
-    {      
+    {
       "es": {
         "default_index": "logstash-*",
         "allow_url_parameter": false
@@ -32,6 +32,6 @@
           "TRACE": "#a2cd5a"
          }
       }
-    }  
+    }
   ]
 }

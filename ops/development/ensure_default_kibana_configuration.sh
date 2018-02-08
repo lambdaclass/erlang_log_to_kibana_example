@@ -8,7 +8,7 @@ while [ $trials -gt 0 ]; do # wait for local elastic search
   if [ "$?" -eq 0 ]; then
     break
   fi
-  trials=$((trials+1))
+  trials=$((trials-1))
   sleep 5
 done
 
@@ -20,7 +20,7 @@ while [ $trials -gt 0 ]; do # wait for local kibana
   if [ "$?" -eq 0 ]; then
     break
   fi
-  trials=$((trials+1))
+  trials=$((trials-1))
   sleep 5
 done
 

@@ -1,6 +1,15 @@
 #!/bin/bash
 set -e
 
+echo "write kibana public network interface"
+read ELK_PUBLIC_INTERFACE
+echo "Write Elastic Search private network interface"
+read ES_PRIVATE_INTERFACE
+echo "Write user name"
+read EKL_USER
+echo "Write password"
+read EKL_PASSWORD
+
 # fetches debian dependencies
 apt-get update
 apt-get install -y curl openjdk-8.jdk wget net-tools \
@@ -12,19 +21,18 @@ apt-get update
 
 # Elastic Search
 apt-get install -y elasticsearch=6.1.3
+mkdir -p /usr/share/elasticsearch/config/
+cat <<EOF > /usr/share/elasticsearch/config/elasticsearch.yml
+transport.host: localhost
+transport.tcp.port: 9300
+http.port: 9200
+network.host:
+EOF
+ES_IP=$(ifconfig $ES_PRIVATE_INTERFACE | grep inet | cut -d: -f2 | \
+               awk '{print $2}' | tr -d "\n")
+sed -i -e "s/^network.host.*/network.host: $ES_IP /" \
+    /usr/share/elasticsearch/config/elasticsearch.yml
 service elasticsearch start
-
-# Wait for elastic search
-set +e
-while true; do
-  echo "$(date) waiting elastic search ..."
-  curl -XGET "localhost:9200/_cluster/state"
-  if [ "$?" -eq 0 ]; then
-    break
-  fi
-  sleep 5
-done
-set -e
 
 # Kibana
 apt-get install -y kibana=6.1.3
@@ -33,17 +41,33 @@ server.host: "127.0.0.1"
 EOF
 service kibana start
 
-# Wait kibana servive
-set +e
-while true; do 
-  echo "$(date) waiting kibana ..."
-  curl -XGET "localhost:5601"
-  if [ "$?" -eq 0 ]; then
-    break
-  fi
-  sleep 5
-done
-set -e
+# Kibana logtrail
+service kibana stop
+/usr/share/kibana/bin/kibana-plugin install \
+  https://github.com/sivasamyk/logtrail/releases/download/v0.1.25/logtrail-6.1.3-0.1.25.zip
+service kibana start
+
+# nginx
+apt-get install -y nginx apache2-utils
+htpasswd -cb /etc/nginx/.htpasswd $EKL_USER $EKL_PASSWORD
+cat <<EOF > /etc/nginx/sites-available/ekl
+server {
+listen
+location / {
+proxy_pass http://localhost:5601/;
+auth_basic "Restricted";
+auth_basic_user_file /etc/nginx/.htpasswd;
+}
+}
+EOF
+NGINX_IP=$(ifconfig $ELK_PUBLIC_INTERFACE | grep inet | cut -d: -f2 | \
+               awk '{print $2}' | tr -d "\n")
+sed -i -e "s/^listen.*/listen $NGINX_IP:5601; /" /etc/nginx/sites-available/ekl
+ln -s /etc/nginx/sites-available/ekl /etc/nginx/sites-enabled/ekl
+service nginx restart
+
+
+## configurations...
 
 # Kibana logstash indice
 curl -f -XPOST -H 'Content-Type: application/json' \
@@ -158,10 +182,8 @@ curl -XPOST localhost:5601/api/kibana/dashboards/import \
     -d @dashboards.json
 rm dashboards.json
 
-# Kibana logtrail
+# Kibana logtrail conf
 service kibana stop
-/usr/share/kibana/bin/kibana-plugin install \
-  https://github.com/sivasamyk/logtrail/releases/download/v0.1.25/logtrail-6.1.3-0.1.25.zip
 cat <<EOF > /usr/share/kibana/plugins/logtrail/logtrail.json
 {
   "index_patterns" : [
@@ -202,38 +224,3 @@ cat <<EOF > /usr/share/kibana/plugins/logtrail/logtrail.json
 }
 EOF
 service kibana start
-
-# Logstash
-apt-get install -y logstash=1:6.1.3-1
-mkdir -p /etc/logstash/conf.d/
-cat <<EOF > /etc/logstash/conf.d/logstash.conf
-input {
-    udp  {
-        codec => "json"
-        port  => 9125
-        type  => "erlang"
-    }
-}
-
-output {
-    elasticsearch { hosts => ["localhost:9200"] }
-}
-EOF
-service logstash start
-
-
-# nginx
-apt-get install -y nginx apache2-utils
-htpasswd -cb /etc/nginx/.htpasswd ekl_user ekl_password # change password
-cat <<EOF > /etc/nginx/sites-available/ekl
-server {
-    listen 0.0.0.0:19090;
-    location / {
-      proxy_pass http://localhost:5601/;
-    auth_basic "Restricted";
-    auth_basic_user_file /etc/nginx/.htpasswd;
-    }
-}
-EOF
-ln -s /etc/nginx/sites-available/ekl /etc/nginx/sites-enabled/ekl
-service nginx restart

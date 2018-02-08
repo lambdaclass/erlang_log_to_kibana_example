@@ -14,7 +14,7 @@ See [how the ops works](ops/).
 ## testing
 
 - `make ops` starts every service and initializes kibana.
-- `make test-debug` and `make test-prod` starts an erlang application that
+- `make test-env1` and `make test-env2` starts an erlang application that
   generates random logs.
 
 You can see the logged data at `http://localhost:5601/` and click in 'Dashboard'.

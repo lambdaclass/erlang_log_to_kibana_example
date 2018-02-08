@@ -1,27 +1,24 @@
 #!/bin/bash
 
 # wait for elastic search
-trials="20"
-while [ $trials -gt 0 ]; do # wait for local elastic search
+while true; do # wait for local elastic search
   echo "$(date) waiting elastic search ..."
   curl -XGET "localhost:9200/_cluster/state"
   if [ "$?" -eq 0 ]; then
     break
   fi
-  trials=$((trials+1))
-  sleep 5
+  trials=$((trials-1))
+  sleep 10
 done
 
 # Wait for kibana
-trials="20"
-while [ $trials -gt 0 ]; do # wait for local kibana
+while true; do # wait for local kibana
   echo "$(date) waiting kibana ..."
   curl -XGET "localhost:5601"
   if [ "$?" -eq 0 ]; then
     break
   fi
-  trials=$((trials+1))
-  sleep 5
+  sleep 10
 done
 
 # Create default index

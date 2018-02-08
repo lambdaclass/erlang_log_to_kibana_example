@@ -14,6 +14,18 @@ apt-get update
 apt-get install -y elasticsearch=6.1.3
 service elasticsearch start
 
+# Wait for elastic search
+set +e
+while true; do
+  echo "$(date) waiting elastic search ..."
+  curl -XGET "localhost:9200/_cluster/state"
+  if [ "$?" -eq 0 ]; then
+    break
+  fi
+  sleep 5
+done
+set -e
+
 # Kibana
 apt-get install -y kibana=6.1.3
 cat << EOF > /etc/kibana/kibana.yml

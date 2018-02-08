@@ -2,13 +2,13 @@
 set -e
 
 echo "write kibana public network interface"
-read ELK_PUBLIC_INTERFACE
+read -r ELK_PUBLIC_INTERFACE
 echo "Write Elastic Search private network interface"
-read ES_PRIVATE_INTERFACE
+read -r ES_PRIVATE_INTERFACE
 echo "Write user name"
-read EKL_USER
+read -r EKL_USER
 echo "Write password"
-read EKL_PASSWORD
+read -r EKL_PASSWORD
 
 # fetches debian dependencies
 apt-get update
@@ -28,7 +28,7 @@ transport.tcp.port: 9300
 http.port: 9200
 network.host:
 EOF
-ES_IP=$(ifconfig $ES_PRIVATE_INTERFACE | grep inet | cut -d: -f2 | \
+ES_IP=$(ifconfig "$ES_PRIVATE_INTERFACE" | grep inet | cut -d: -f2 | \
                awk '{print $2}' | tr -d "\n")
 sed -i -e "s/^network.host.*/network.host: $ES_IP /" \
     /usr/share/elasticsearch/config/elasticsearch.yml
@@ -49,7 +49,7 @@ service kibana start
 
 # nginx
 apt-get install -y nginx apache2-utils
-htpasswd -cb /etc/nginx/.htpasswd $EKL_USER $EKL_PASSWORD
+htpasswd -cb /etc/nginx/.htpasswd "$EKL_USER" "$EKL_PASSWORD"
 cat <<EOF > /etc/nginx/sites-available/ekl
 server {
 listen
@@ -60,7 +60,7 @@ auth_basic_user_file /etc/nginx/.htpasswd;
 }
 }
 EOF
-NGINX_IP=$(ifconfig $ELK_PUBLIC_INTERFACE | grep inet | cut -d: -f2 | \
+NGINX_IP=$(ifconfig "$ELK_PUBLIC_INTERFACE" | grep inet | cut -d: -f2 | \
                awk '{print $2}' | tr -d "\n")
 sed -i -e "s/^listen.*/listen $NGINX_IP:5601; /" /etc/nginx/sites-available/ekl
 ln -s /etc/nginx/sites-available/ekl /etc/nginx/sites-enabled/ekl

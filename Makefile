@@ -7,8 +7,8 @@ default:
 	@echo "make test-[debug|prod]: runs the test erlang application with different ENV variable set"
 
 ops:
-	cd ops/development/ensure_kibana_configuration && \
-	 docker-compose up --build --force-recreate -d
+	cd ops/development/ && \
+	 sh ensure_default_kibana_configuration.sh &
 	cd ops/development && \
 	 docker-compose up --build --force-recreate --abort-on-container-exit
 

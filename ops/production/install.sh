@@ -1,13 +1,17 @@
 #!/bin/bash
 set -e
 
-echo "write kibana public network interface"
-read -r ELK_PUBLIC_INTERFACE
-echo "Write Elastic Search private network interface"
+echo "=========================================="
+echo "= This script will install kibana, nginx ="
+echo "=          and elastic search            ="
+echo "=========================================="
+printf "Write kibana public network interface: "
+read -r KIBANA_PUBLIC_INTERFACE
+printf "Write Elastic Search private network interface: "
 read -r ES_PRIVATE_INTERFACE
-echo "Write user name"
+printf "Write user name: "
 read -r EKL_USER
-echo "Write password"
+printf "Write password: "
 read -r EKL_PASSWORD
 
 # fetches debian dependencies
@@ -21,17 +25,15 @@ apt-get update
 
 # Elastic Search
 apt-get install -y elasticsearch=6.1.3
+ES_IP=$(ifconfig "$ES_PRIVATE_INTERFACE" | grep inet | cut -d: -f2 | \
+               awk '{print $2}' | tr -d "\n")
 mkdir -p /usr/share/elasticsearch/config/
 cat <<EOF > /usr/share/elasticsearch/config/elasticsearch.yml
 transport.host: localhost
 transport.tcp.port: 9300
 http.port: 9200
-network.host:
+network.host: $ES_IP
 EOF
-ES_IP=$(ifconfig "$ES_PRIVATE_INTERFACE" | grep inet | cut -d: -f2 | \
-               awk '{print $2}' | tr -d "\n")
-sed -i -e "s/^network.host.*/network.host: $ES_IP /" \
-    /usr/share/elasticsearch/config/elasticsearch.yml
 service elasticsearch start
 
 # Kibana
@@ -50,33 +52,31 @@ service kibana start
 # nginx
 apt-get install -y nginx apache2-utils
 htpasswd -cb /etc/nginx/.htpasswd "$EKL_USER" "$EKL_PASSWORD"
+NGINX_IP=$(ifconfig "$KIBANA_PUBLIC_INTERFACE" | grep inet | cut -d: -f2 | \
+               awk '{print $2}' | tr -d "\n")
 cat <<EOF > /etc/nginx/sites-available/ekl
 server {
-listen
-location / {
-proxy_pass http://localhost:5601/;
-auth_basic "Restricted";
-auth_basic_user_file /etc/nginx/.htpasswd;
-}
+    listen $NGINX_IP:5601;
+    location / {
+        proxy_pass http://localhost:5601/;
+        auth_basic "Restricted";
+        auth_basic_user_file /etc/nginx/.htpasswd;
+    }
 }
 EOF
-NGINX_IP=$(ifconfig "$ELK_PUBLIC_INTERFACE" | grep inet | cut -d: -f2 | \
-               awk '{print $2}' | tr -d "\n")
-sed -i -e "s/^listen.*/listen $NGINX_IP:5601; /" /etc/nginx/sites-available/ekl
 ln -s /etc/nginx/sites-available/ekl /etc/nginx/sites-enabled/ekl
 service nginx restart
 
-
 ## configurations...
 
-# Kibana logstash indice
+# Kibana logstash index
 curl -f -XPOST -H 'Content-Type: application/json' \
      -H 'kbn-xsrf: anything' \
      'http://localhost:5601/api/saved_objects/index-pattern/logstash-*' \
      '-d{"attributes":{"title":"logstash-*","timeFieldName":"@timestamp"}}'
 
 # Kibana dashboard
-cat <<EOF > dashboards.json
+cat <<EOF > .tmp.kibana.dashboards.json
 {
   "version": "6.1.3",
   "objects": [
@@ -179,8 +179,8 @@ EOF
 curl -XPOST localhost:5601/api/kibana/dashboards/import \
     -H 'kbn-xsrf:true' \
     -H 'Content-type:application/json' \
-    -d @dashboards.json
-rm dashboards.json
+    -d @.tmp.kibana.dashboards.json
+rm .tmp.kibana.dashboards.json
 
 # Kibana logtrail conf
 service kibana stop

@@ -24,7 +24,7 @@ input {
 }
 
 output {
-    elasticsearch { hosts => ["$ELASTIC_SEARCH_HOST:9200"] }
+    elasticsearch { hosts => ["http://$ELASTIC_SEARCH_HOST:9200"] }
 }
 EOF
 service logstash start

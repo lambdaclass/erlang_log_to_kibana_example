@@ -1,10 +1,6 @@
 #!/bin/bash
 set -e
 
-echo "=========================================="
-echo "= This script will install kibana, nginx ="
-echo "=          and elastic search            ="
-echo "=========================================="
 printf "Write kibana public network interface: "
 read -r KIBANA_PUBLIC_INTERFACE
 printf "Write Elastic Search private network interface: "

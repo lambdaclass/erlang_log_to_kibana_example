@@ -22,9 +22,10 @@ apt-get update
 # Elastic Search
 apt-get install -y elasticsearch=6.1.3
 ES_IP=$(ifconfig "$ES_PRIVATE_INTERFACE" | grep inet | cut -d: -f2 | \
-               awk '{print $2}' | tr -d "\n")
-mkdir -p /usr/share/elasticsearch/config/
-cat <<EOF > /usr/share/elasticsearch/config/elasticsearch.yml
+            awk '{print $2}' | tr -d "\n")
+cat <<EOF > /etc/elasticsearch/elasticsearch.yml
+path.data: /var/lib/elasticsearch
+path.logs: /var/log/elasticsearch
 transport.host: localhost
 transport.tcp.port: 9300
 http.port: 9200
@@ -35,6 +36,7 @@ service elasticsearch start
 # Kibana
 apt-get install -y kibana=6.1.3
 cat << EOF > /etc/kibana/kibana.yml
+elasticsearch.url: "http://$ES_IP:9200"
 server.host: "127.0.0.1"
 EOF
 service kibana start

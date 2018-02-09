@@ -1,13 +1,13 @@
 {"1.1.0",
 [{<<"goldrush">>,{pkg,<<"goldrush">>,<<"0.1.9">>},1},
  {<<"jiffy">>,
-  {git,"git@github.com:davisp/jiffy.git",
+  {git,"https://github.com/davisp/jiffy.git",
        {ref,"031f9dbbf6c31b83585569cd290504f006540a77"}},
   1},
  {<<"lager">>,{pkg,<<"lager">>,<<"3.6.1">>},0},
  {<<"lager_logstash_backend">>,
   {git,"https://github.com/lambdaclass/lager_logstash_backend",
-       {ref,"7031f1fa3b09391cda341501787784d7a57db532"}},
+       {ref,"7eddfcabae7a1c5faf1df9875276de13ddbc1f79"}},
   0}]}.
 [
 {pkg_hash,[

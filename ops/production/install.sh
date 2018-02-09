@@ -1,14 +1,14 @@
 #!/bin/bash
 set -e
 
-printf "Write kibana public network interface: "
+printf "Write Kibana public network interface: "
 read -r KIBANA_PUBLIC_INTERFACE
 printf "Write Elastic Search private network interface: "
 read -r ES_PRIVATE_INTERFACE
-printf "Write user name: "
-read -r EKL_USER
-printf "Write password: "
-read -r EKL_PASSWORD
+printf "Write Kibana user name: "
+read -r KIBANA_USER
+printf "Write Kibana password: "
+read -r KIBANA_PASSWORD
 
 # fetches debian dependencies
 apt-get update
@@ -47,7 +47,7 @@ service kibana start
 
 # nginx
 apt-get install -y nginx apache2-utils
-htpasswd -cb /etc/nginx/.htpasswd "$EKL_USER" "$EKL_PASSWORD"
+htpasswd -cb /etc/nginx/.htpasswd "$KIBANA_USER" "$KIBANA_PASSWORD"
 NGINX_IP=$(ifconfig "$KIBANA_PUBLIC_INTERFACE" | grep inet | cut -d: -f2 | \
                awk '{print $2}' | tr -d "\n")
 cat <<EOF > /etc/nginx/sites-available/ekl

@@ -1,0 +1,8 @@
+FROM nginx
+
+RUN apt-get update && apt-get install -y apache2-utils
+
+RUN htpasswd -cb /etc/nginx/.htpasswd "es_user" "es_password"
+
+COPY elastic-search-nginx.conf /etc/nginx/conf.d/default.conf
+

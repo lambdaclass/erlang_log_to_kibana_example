@@ -17,19 +17,19 @@
         "mapping" : {
             "timestamp" : "@timestamp",
             "display_timestamp" : "@timestamp",
+            "log_level" : "fields.level",
             "hostname" : "host",
             "program": "type",
             "message": "message"
         },
-        "message_format": "{{{marker}}} | {{{message}}}"
+        "message_format": "{{{marker}}} {{{fields.level}}} | {{{message}}}"
       },
       "color_mapping" : {
-        "field" : "log_level",
+        "field" : "fields.level",
         "mapping" : {
-          "ERROR": "#ff3232",
-          "WARN": "#ff7f24",
-          "DEBUG": "#ffb90f",
-          "TRACE": "#a2cd5a"
+          "error": "#ff3232",
+          "warning": "#ff7f24",
+          "info": "#ffffff"
          }
       }
     }

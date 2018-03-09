@@ -13,7 +13,7 @@ ops:
 	 docker-compose up --build --force-recreate --abort-on-container-exit
 
 test-env1:
-	export ENV="prod" && rebar3 shell
+	rebar3 shell --name test1@127.0.0.1
 
 test-env2:
-	export ENV="debug" && rebar3 shell
+	rebar3 shell --name test2@127.0.0.1

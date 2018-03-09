@@ -7,7 +7,7 @@
  {<<"lager">>,{pkg,<<"lager">>,<<"3.6.1">>},0},
  {<<"lager_logstash_backend">>,
   {git,"https://github.com/lambdaclass/lager_logstash_backend",
-       {ref,"7eddfcabae7a1c5faf1df9875276de13ddbc1f79"}},
+       {ref,"b06034cd3b947062eb572ce444fbe6875017fac2"}},
   0}]}.
 [
 {pkg_hash,[
